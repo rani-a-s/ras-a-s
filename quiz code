@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Multiple Choice Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f4f6;
+      padding: 20px;
+    }
+    .quiz-container {
+      background-color: white;
+      max-width: 600px;
+      margin: auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    .answer {
+      display: block;
+      margin: 10px 0;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2563eb;
+    }
+    #score {
+      font-size: 22px;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <div id="quiz">
+      <div class="question" id="question"></div>
+      <div id="answers"></div>
+      <button onclick="submitAnswer()">Submit</button>
+    </div>
+    <div id="score"></div>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "What is the capital of France?",
+        options: ["Paris", "Madrid", "Berlin", "London"],
+        correct: "Paris"
+      },
+      {
+        question: "Which language runs in a web browser?",
+        options: ["Java", "C", "Python", "JavaScript"],
+        correct: "JavaScript"
+      },
+      {
+        question: "What does HTML stand for?",
+        options: [
+          "Hyper Trainer Marking Language",
+          "Hyper Text Markup Language",
+          "Hyper Text Marketing Language",
+          "Hyper Text Markup Leveler"
+        ],
+        correct: "Hyper Text Markup Language"
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const questionEl = document.getElementById("question");
+      const answersEl = document.getElementById("answers");
+      const q = quizData[currentQuestion];
+
+      questionEl.textContent = q.question;
+      answersEl.innerHTML = "";
+
+      q.options.forEach(option => {
+        const radioBtn = document.createElement("input");
+        radioBtn.type = "radio";
+        radioBtn.name = "answer";
+        radioBtn.value = option;
+        radioBtn.id = option;
+
+        const label = document.createElement("label");
+        label.htmlFor = option;
+        label.textContent = option;
+        label.className = "answer";
+
+        answersEl.appendChild(radioBtn);
+        answersEl.appendChild(label);
+        answersEl.appendChild(document.createElement("br"));
+      });
+    }
+
+    function submitAnswer() {
+      const selected = document.querySelector('input[name="answer"]:checked');
+      if (!selected) {
+        alert("Please select an answer!");
+        return;
+      }
+
+      const answer = selected.value;
+      if (answer === quizData[currentQuestion].correct) {
+        score++;
+      }
+
+      currentQuestion++;
+      if (currentQuestion < quizData.length) {
+        loadQuestion();
+      } else {
+        document.getElementById("quiz").style.display = "none";
+        document.getElementById("score").textContent = `You scored ${score} out of ${quizData.length}`;
+      }
+    }
+
+    // Load the first question
+    loadQuestion();
+  </script>
+</body>
+</html>
